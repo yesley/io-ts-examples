@@ -16,6 +16,6 @@ const string = new t.Type<string, string, unknown>(
 )
 
 string.is('a string') // true
+string.decode('a string') // right("a string")
+string.decode(null) // left(errors...)
 string.encode('a string') // "a string"
-isRight(string.decode('a string')) // true
-isRight(string.decode(null)) // false
