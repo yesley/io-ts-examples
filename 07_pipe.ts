@@ -1,13 +1,22 @@
 import * as t from 'io-ts'
+import { withValidate } from 'io-ts-types'
 
-const NumberCodec = new t.Type<number, string, string>(
-  'NumberCodec',
-  t.number.is,
-  (s, c) => {
-    const n = parseFloat(s)
-    return isNaN(n) ? t.failure(s, c) : t.success(n)
+const UppercaseString = withValidate(
+  t.string,
+  (u, c) => {
+    return t.string.is(u) ? t.success(u.toUpperCase()) : t.failure(u, c)
   },
-  String,
+  'UppercaseString',
 )
+type IUppercaseString = t.TypeOf<typeof UppercaseString>
 
-const NumberFromString = t.string.pipe(NumberCodec, 'NumberFromString')
+const CountryCode = UppercaseString.pipe(
+  t.keyof({
+    RU: null,
+    GB: null,
+    US: null,
+    JP: null,
+  }),
+  'CountryCode',
+)
+type ICountryCode = t.TypeOf<typeof CountryCode>
